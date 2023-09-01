@@ -10,8 +10,17 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  phone: Number,
+  phoneNumber: String,
+  email: String,
   address: String,
+  roles: {
+    User: {
+      type: Number,
+      default: 2001,
+    },
+    Editor: Number,
+    Admin: Number,
+  },
   orders: [
     {
       type: mongoose.Schema.Types.ObjectId,

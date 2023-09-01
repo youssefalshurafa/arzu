@@ -17,42 +17,49 @@ import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import * as z from 'zod';
-import Image from 'next/image';
-import { ChangeEvent } from 'react';
+import { updateUser } from '@/lib/controllers/user.controller';
+import { usePathname, useRouter } from 'next/navigation';
 
 interface Props {
   user: {
     id: string;
-    objectId: string;
+
     name: string;
-    image: string;
+    phoneNumber: string;
+    address: string;
+    email: string;
   };
   btnTitle: string;
 }
 
 const AccountProfile = ({ user, btnTitle }: Props) => {
+  const pathname = usePathname();
+  const router = useRouter();
   const form = useForm({
     resolver: zodResolver(UserValidation),
     defaultValues: {
-      profile_photo: user?.image || '',
       name: user?.name || '',
-      address: '',
-      phoneNumber: '',
+      address: user?.address || '',
+      phoneNumber: user?.phoneNumber || '',
+      email: user?.email || '',
     },
   });
 
-  const handleImage = (
-    e: ChangeEvent,
-    fieldChange: (value: string) => void
-  ) => {
-    e.preventDefault();
+  const onSubmit = async (values: z.infer<typeof UserValidation>) => {
+    await updateUser({
+      userId: user.id,
+      name: values.name,
+      phoneNumber: values.phoneNumber,
+      email: values.email,
+      address: values.address,
+      path: pathname,
+    });
+    if (pathname === '/profile/edit') {
+      router.back();
+    } else {
+      router.push('/');
+    }
   };
-
-  function onSubmit(values: z.infer<typeof UserValidation>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-  }
 
   return (
     <Form {...form}>
@@ -62,50 +69,26 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
       >
         <FormField
           control={form.control}
-          name="profile_photo"
+          name="name"
           render={({ field }) => (
-            <FormItem className="flex items-center gap-4">
-              <FormLabel className="flex h-24 w-24 items-center justify-center rounded-full">
-                {field.value ? (
-                  <Image
-                    src={field.value}
-                    alt="profile photo"
-                    width={96}
-                    height={96}
-                    priority
-                    className=" rounded-full object-contain"
-                  />
-                ) : (
-                  <Image
-                    src="/assets/profile.svg"
-                    alt="profile photo"
-                    width={24}
-                    height={24}
-                    className="  object-contain"
-                  />
-                )}
-              </FormLabel>
-              <FormControl className="flex-1 text-base-semibold">
-                <Input
-                  type="file"
-                  accept="/image/*"
-                  placeholder="Upload_photo"
-                  className="cursor-pointer  outline-none file:text-blue-500"
-                  onChange={(e) => handleImage(e, field.onChange)}
-                />
+            <FormItem className="flex flex-col gap-3 w-full">
+              <FormLabel className=" font-semibold">Name</FormLabel>
+              <FormControl>
+                <Input type="text" className="border no-focus" {...field} />
               </FormControl>
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
-          name="name"
+          name="email"
           render={({ field }) => (
             <FormItem className="flex flex-col gap-3 w-full">
-              <FormLabel className=" font-semibold">Name</FormLabel>
+              <FormLabel className=" font-semibold">E-mail</FormLabel>
               <FormControl>
-                <Input type="text" className="border no-focus" />
+                <Input type="text" className="border no-focus" {...field} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -116,7 +99,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
             <FormItem className="flex flex-col gap-3 w-full">
               <FormLabel className=" font-semibold">Phone Number</FormLabel>
               <FormControl>
-                <Input type="text" className="border no-focus" />
+                <Input type="text" className="border no-focus" {...field} />
               </FormControl>
             </FormItem>
           )}

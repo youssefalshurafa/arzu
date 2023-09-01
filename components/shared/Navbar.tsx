@@ -4,8 +4,8 @@ import {
   SignedOut,
   SignInButton,
   SignedIn,
-  UserButton,
-  currentUser,
+  useAuth,
+  SignOutButton,
 } from '@clerk/nextjs';
 import {
   DropdownMenu,
@@ -15,10 +15,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import { Menu, ShoppingBag, Heart } from 'lucide-react';
+import { Menu, ShoppingBag, Heart, User, LogIn, LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 function Navbar() {
+  const { userId, isSignedIn } = useAuth();
+  console.log(isSignedIn);
+
   const category = [
     { id: 1, name: 'Kids' },
     { id: 2, name: 'Tracksuits' },
@@ -69,14 +73,39 @@ function Navbar() {
         </div>
 
         <SignedOut>
-          <SignInButton />
-          <ShoppingBag />
+          <div className="flex gap-4 absolute right-5">
+            <SignInButton>
+              <div className="flex gap-2 cursor-pointer">
+                <LogIn />
+                <p className="font-semibold text-blue-500 underline">
+                  {' '}
+                  Sign-in
+                </p>
+              </div>
+            </SignInButton>
+            <Heart className=" hover: cursor-pointer" />
+            <ShoppingBag />
+          </div>
         </SignedOut>
         <div className="flex items-center gap-3 md:gap-8">
           <SignedIn>
-            <UserButton afterSignOutUrl="/" />
-            <Heart />
-            <ShoppingBag />
+            <div className="flex gap-4">
+              <SignOutButton>
+                <div className="flex gap-2 cursor-pointer">
+                  <LogOut />
+                  <p className="font-semibold text-blue-500 underline">
+                    {' '}
+                    Sign-out
+                  </p>
+                </div>
+              </SignOutButton>
+              <User
+                onClick={() => router.push(`/profile/${userId}`)}
+                className=" hover: cursor-pointer"
+              />
+              <Heart className=" hover: cursor-pointer" />
+              <ShoppingBag className=" hover: cursor-pointer" />
+            </div>
           </SignedIn>
         </div>
       </nav>

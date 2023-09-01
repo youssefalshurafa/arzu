@@ -1,23 +1,34 @@
-import { Button } from '@/components/ui/button';
+import AccountProfile from '@/components/forms/AccountProfile';
+import { getUser } from '@/lib/controllers/user.controller';
 import { currentUser } from '@clerk/nextjs';
-import { redirect } from 'next/navigation';
 
-import React from 'react';
-
-export default async function Page() {
+async function Page() {
   const user = await currentUser();
   if (!user) return null;
+  const userInfo = await getUser(user?.id);
 
+  const userData = {
+    id: user?.id,
+
+    name: userInfo ? userInfo?.name : '',
+    phoneNumber: userInfo ? userInfo?.phoneNumber : '',
+    address: userInfo ? userInfo?.address : '',
+    email: userInfo
+      ? userInfo?.email
+      : '' ||
+        user?.emailAddresses.map((email) => email.emailAddress).toString(),
+  };
   return (
-    <section className=" items-center text-center">
-      <h1 className=" text-5xl font-bold font-sans p-8">
-        Hi, {user?.firstName}
-      </h1>
-      <div className="w-full">
-        <Button onClick={redirect(`/profile/${user?.id}`)}>
-          Please Update your profile
-        </Button>
-      </div>
-    </section>
+    <main className="mx-auto flex max-w-3xl flex-col justify-start px-10 py-20">
+      <h1 className="text-3xl font-bold">My Profile</h1>
+      <p className="mt-3 text-base">
+        Complete your profile to be able to order
+      </p>
+      <section className="mt-9 p-10 bg-slate-50">
+        <AccountProfile user={userData} btnTitle="Continue" />
+      </section>
+    </main>
   );
 }
+
+export default Page;

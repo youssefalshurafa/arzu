@@ -1,16 +1,22 @@
 import AccountProfile from '@/components/forms/AccountProfile';
+import { getUser } from '@/lib/controllers/user.controller';
 import { currentUser } from '@clerk/nextjs';
 
 async function Page() {
   const user = await currentUser();
-
-  const userInfo = {};
+  if (!user) return null;
+  const userInfo = await getUser(user?.id);
 
   const userData = {
     id: user?.id,
-    objectId: userInfo?._id,
-    name: userInfo?.name || user?.firstName,
-    image: userInfo?.image || user?.imageUrl,
+
+    name: userInfo ? userInfo?.name : '',
+    phoneNumber: userInfo ? userInfo?.phoneNumber : '',
+    address: userInfo ? userInfo?.address : '',
+    email: userInfo
+      ? userInfo?.email
+      : '' ||
+        user?.emailAddresses.map((email) => email.emailAddress).toString(),
   };
   return (
     <main className="mx-auto flex max-w-3xl flex-col justify-start px-10 py-20">
