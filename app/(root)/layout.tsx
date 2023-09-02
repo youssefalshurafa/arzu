@@ -9,6 +9,8 @@ import {
   DM_Serif_Display,
   Poppins,
 } from 'next/font/google';
+import { getUser } from '@/lib/controllers/user.controller';
+import { UserInfo } from '@/lib/Types';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -45,6 +47,13 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const user = await currentUser();
+  if (!user) return null;
+
+  const userInfo: UserInfo = await JSON.parse(
+    JSON.stringify(await getUser(user.id))
+  );
+
   return (
     <ClerkProvider>
       <html lang="en">
@@ -52,7 +61,7 @@ export default async function RootLayout({
           className={`${inter.variable} ${poppins.variable} ${roboto_mono.variable} ${dm_serif_display.variable}`}
         >
           <div className="  flex flex-col  min-h-screen font-sans">
-            <Navbar />
+            <Navbar user={userInfo} />
             <div className=" -mt-42">{children}</div>
             <div className="absolute bottom-0  text-center w-full">
               <Footer />

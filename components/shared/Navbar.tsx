@@ -4,7 +4,6 @@ import {
   SignedOut,
   SignInButton,
   SignedIn,
-  useAuth,
   SignOutButton,
 } from '@clerk/nextjs';
 import {
@@ -17,12 +16,9 @@ import {
 } from '../ui/dropdown-menu';
 import { Menu, ShoppingBag, Heart, User, LogIn, LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { Button } from '../ui/button';
 
-function Navbar() {
-  const { userId, isSignedIn } = useAuth();
-  console.log(isSignedIn);
-
+function Navbar({ user }: any) {
   const category = [
     { id: 1, name: 'Kids' },
     { id: 2, name: 'Tracksuits' },
@@ -31,6 +27,8 @@ function Navbar() {
     { id: 5, name: 'Dresses' },
   ];
   const router = useRouter();
+  const roles = user.roles;
+
   return (
     <>
       <nav className=" flex justify-between px-6 py-3 bg-slate-50 drop-shadow-md">
@@ -47,8 +45,8 @@ function Navbar() {
               {category.map((category, i) => (
                 <DropdownMenuItem
                   key={i}
-                  className=" justify-center text-lg font-semibold"
-                  onClick={() => router.push(`/category/${category.id}`)}
+                  className=" justify-center text-lg font-semibold cursor-pointer"
+                  onClick={() => router.push(`/category/${category.name}`)}
                 >
                   {category.name}
                 </DropdownMenuItem>
@@ -89,7 +87,12 @@ function Navbar() {
         </SignedOut>
         <div className="flex items-center gap-3 md:gap-8">
           <SignedIn>
-            <div className="flex gap-4">
+            <div className="flex gap-4 items-center">
+              {roles.Admin || roles.Editor ? (
+                <Button size={'sm'}>Admin</Button>
+              ) : (
+                <></>
+              )}
               <SignOutButton>
                 <div className="flex gap-2 cursor-pointer">
                   <LogOut />
@@ -100,7 +103,7 @@ function Navbar() {
                 </div>
               </SignOutButton>
               <User
-                onClick={() => router.push(`/profile/${userId}`)}
+                onClick={() => router.push(`/profile/${user.id}`)}
                 className=" hover: cursor-pointer"
               />
               <Heart className=" hover: cursor-pointer" />
