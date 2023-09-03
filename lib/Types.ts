@@ -1,5 +1,4 @@
 export type UserInfo = {
-  roles: string;
   _id?: string;
   id: string;
   __v?: number;
@@ -8,4 +7,11 @@ export type UserInfo = {
   orders: string;
   address: string;
   phoneNumber: string;
+  roles: Roles;
+};
+
+export type Roles = {
+  Admin: string;
+  Editor: string;
+  User: string;
 };
