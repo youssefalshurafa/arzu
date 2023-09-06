@@ -11,6 +11,7 @@ const nextConfig = {
       'res.cloudinary.com',
       'cdn-media.prettylittlething.com',
       'img.clerk.com',
+      'utfs.io',
     ],
   },
 };

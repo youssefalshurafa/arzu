@@ -1,15 +1,27 @@
+'use client';
+import { getBanner } from '@/lib/controllers/banner.controller';
 import Image from 'next/image';
-import React from 'react';
+import { useEffect, useState } from 'react';
 
 const Banner = () => {
+  const [banner, setBanner] = useState('');
+
+  const getbanner = async () => {
+    const banner = await getBanner();
+    setBanner(banner.map((item) => item.imgUrl).toString());
+  };
+
+  useEffect(() => {
+    getbanner();
+  }, [banner]);
   return (
     <>
       <div className="  ">
         <Image
-          src="https://cdn-media.prettylittlething.com/bms/media/2023/08/25/lkLue4PQT1whfdiGMafK7YN2eNt76Yp3aeuSO9FV.jpg?imwidth=2048"
+          src={banner}
           alt="banner"
-          width={1500}
-          height={1500}
+          width={728}
+          height={90}
           style={{ margin: 'auto' }}
         />
       </div>
