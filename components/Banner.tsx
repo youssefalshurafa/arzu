@@ -16,7 +16,7 @@ const Banner = () => {
   }, [banner]);
   return (
     <>
-      <div className="  ">
+      <div>
         <Image
           src={banner}
           alt="banner"
