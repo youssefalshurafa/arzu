@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -12,21 +11,24 @@ import {
 import * as z from 'zod';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { ProductType } from '@/lib/Types';
 import { ProductValidation } from '@/lib/validations/product';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { uploadFiles } from '@/lib/controllers/files.controller';
-import { ChangeEvent, FormEvent, useState } from 'react';
-import { UploadButton } from '@/lib/utils/uploadthing';
+import { FormEvent, useState } from 'react';
+import { UploadButton, UploadDropzone } from '@/lib/utils/uploadthing';
+import { useToast } from '@/components/ui/use-toast';
 
 const Page = () => {
-  const [thumbnail, setThumbnail] = useState<any[]>([]);
+  const [thumbnail, setThumbnail] = useState<string>('');
+  const [images, setImages] = useState<string[]>([]);
+
+  const { toast } = useToast();
   const form = useForm({
     resolver: zodResolver(ProductValidation),
   });
 
   console.log('Thumbnail: ', thumbnail);
+  console.log('Images: ', images);
 
   const onSubmit = async (
     values: z.infer<typeof ProductValidation>,
@@ -120,14 +122,15 @@ const Page = () => {
               <FormLabel className=" font-semibold">Thumbnail</FormLabel>
               <FormControl>
                 <UploadButton
-                  endpoint="media"
+                  className=" ut-button:bg-purple-700 ut-contianer:w-full :"
+                  endpoint="thumbnail"
                   onClientUploadComplete={(res) => {
                     // Do something with the response
-                    if (res) setThumbnail(res?.map((item) => item.url));
-
-                    console.log('Files: ', res);
-
-                    alert('Upload Completed');
+                    if (res)
+                      setThumbnail(res?.map((item) => item.url).toString());
+                    toast({
+                      title: 'Upload Completed',
+                    });
                   }}
                   onUploadError={(error: Error) => {
                     // Do something with the error.
@@ -145,11 +148,20 @@ const Page = () => {
             <FormItem className="flex flex-col gap-3 w-full">
               <FormLabel className=" font-semibold">Images</FormLabel>
               <FormControl>
-                <Input
-                  type="file"
-                  multiple
-                  className="border no-focus cursor-pointer"
-                  {...field}
+                <UploadDropzone
+                  className=" ut-button:bg-purple-700 ut-contianer:w-full :"
+                  endpoint="images"
+                  onClientUploadComplete={(res) => {
+                    // Do something with the response
+                    if (res) setImages(res?.map((item) => item.url));
+                    toast({
+                      title: 'Upload Completed',
+                    });
+                  }}
+                  onUploadError={(error: Error) => {
+                    // Do something with the error.
+                    alert(`ERROR! ${error.message}`);
+                  }}
                 />
               </FormControl>
             </FormItem>
