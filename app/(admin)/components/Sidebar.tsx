@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@clerk/nextjs';
-import { Home, ImageIcon, Mountain } from 'lucide-react';
+import { Home, ImageIcon, Mountain, Shirt } from 'lucide-react';
 
 function Sidebar() {
   const router = useRouter();
@@ -42,6 +42,16 @@ function Sidebar() {
         >
           <Mountain />
           <p className="md:flex hidden">Category</p>
+        </Link>
+        <Link
+          className={`${
+            pathname === '/admin/products' &&
+            'bg-purple-600 hover:bg-purple-600 text-white'
+          } hover:bg-purple-300 hover:text-white relative flex justify-start gap-4 rounded-lg p-4`}
+          href="/admin/products"
+        >
+          <Shirt />
+          <p className="md:flex hidden">Products</p>
         </Link>
       </div>
       <div className="mt-10 px-6">

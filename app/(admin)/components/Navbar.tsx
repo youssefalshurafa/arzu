@@ -8,7 +8,7 @@ const Navbar = async () => {
   const userInfo = await JSON.parse(JSON.stringify(await getUser(user.id)));
 
   return (
-    <nav>
+    <nav className="sticky  top-0 z-30">
       <Mainnav userInfo={userInfo} />
     </nav>
   );

@@ -27,7 +27,7 @@ const Mainnav = ({ userInfo }: Props) => {
   const router = useRouter();
 
   return (
-    <nav className="flex w-full justify-between px-6 py-3 bg-slate-50 drop-shadow-md">
+    <nav className="flex w-full  justify-between px-6 py-3 bg-slate-50 drop-shadow-md">
       <div className=" mx-auto">
         <h1
           onClick={() => router.push('/')}

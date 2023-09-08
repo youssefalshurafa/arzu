@@ -8,14 +8,19 @@ import {
   deleteCategory,
   getCategories,
   newCategory,
+  updateCategory,
 } from '@/lib/controllers/product.controller';
 import { FormEvent, useEffect, useState } from 'react';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
+import Category from '@/lib/models/category.model';
 
 const Page = () => {
   const [name, setName] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState<String[]>([]);
+  const [editActive, setEditActive] = useState<any>(false);
+  const [newName, setNewName] = useState<string>('');
+
   const { toast } = useToast();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -46,11 +51,11 @@ const Page = () => {
   useEffect(() => {
     getAllCategories();
   }, []);
-  console.log(`name: ${name}`);
 
   const deleteCat = async () => {
     try {
       await deleteCategory({ name: name });
+
       getAllCategories();
       setName('');
       toast({
@@ -58,6 +63,22 @@ const Page = () => {
         description: `Category name: ${name}`,
         variant: 'destructive',
       });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleEditButton = (category: any) => {
+    setEditActive(editActive === category ? null : category);
+  };
+
+  const changeCategoryName = async (category: any) => {
+    try {
+      await updateCategory({ name: category, newName: newName });
+      getAllCategories();
+      toast({
+        title: 'Category updated',
+      });
+      setEditActive('');
     } catch (error) {
       console.log(error);
     }
@@ -91,7 +112,9 @@ const Page = () => {
                 </div>
 
                 <div className="flex gap-6">
-                  <Button>Edit</Button>
+                  <Button onClick={() => handleEditButton(category)}>
+                    Edit
+                  </Button>
                   <AlertDialog.Root>
                     <AlertDialog.Trigger asChild>
                       <Button
@@ -124,6 +147,36 @@ const Page = () => {
                     </AlertDialog.Portal>
                   </AlertDialog.Root>
                 </div>
+              </div>
+              <div
+                className={`transition-all transform duration-500  ease-in-out ${
+                  editActive === category
+                    ? ' scale-y-100 opacity-100 translate-y-0'
+                    : 'scale-y-0 opacity-0 -translate-y-2'
+                } `}
+              >
+                {editActive === category && (
+                  <section
+                    className={` flex flex-col shadow-md w-full gap-4 bg-slate-100 p-2 rounded-md  `}
+                  >
+                    <div className="pt-3">
+                      <Input
+                        placeholder="Enter new name here"
+                        type="text"
+                        onChange={(e) => setNewName(e.target.value)}
+                      />
+                    </div>
+                    <div className=" flex justify-center space-x-4 pb-3">
+                      <Button
+                        onClick={() => changeCategoryName(category)}
+                        className=" bg-blue-500 hover:bg-blue-900"
+                      >
+                        Confirm
+                      </Button>
+                      <Button onClick={() => setEditActive('')}>Cancel</Button>
+                    </div>
+                  </section>
+                )}
               </div>
               <Separator />
             </>

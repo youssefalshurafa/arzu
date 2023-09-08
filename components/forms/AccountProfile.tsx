@@ -35,6 +35,7 @@ interface Props {
 const AccountProfile = ({ user, btnTitle }: Props) => {
   const pathname = usePathname();
   const router = useRouter();
+
   const form = useForm({
     resolver: zodResolver(UserValidation),
     defaultValues: {

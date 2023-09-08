@@ -15,3 +15,15 @@ export type Roles = {
   Editor: string;
   User: string;
 };
+
+export type ProductType = {
+  title: string;
+  code: number;
+  description?: string;
+  price: number;
+  size: string;
+  category: string;
+  stock?: number;
+  thumbnail: string;
+  images: string[];
+};

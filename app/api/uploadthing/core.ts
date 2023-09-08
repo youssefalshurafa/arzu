@@ -9,7 +9,7 @@ const getUser = async () => await currentUser();
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
-  banner: f({ image: { maxFileSize: '8MB' } })
+  media: f({ image: { maxFileSize: '8MB' } })
     // Set permissions and file types for this FileRoute
     .middleware(async ({ req }) => {
       // This code runs on your server before upload
@@ -27,7 +27,6 @@ export const ourFileRouter = {
       console.log('Upload complete for userId:', metadata.userId);
 
       console.log('file url', file.url);
-      await changeBanner({ imgUrl: file.url });
     }),
 } satisfies FileRouter;
 
