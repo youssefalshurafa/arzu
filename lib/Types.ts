@@ -18,12 +18,17 @@ export type Roles = {
 
 export type ProductType = {
   title: string;
-  code: number;
+  code: string;
   description?: string;
-  price: number;
+  price: string;
   size: string;
   category: string;
-  stock?: number;
+  stock?: string;
   thumbnail: string;
   images: string[];
+};
+
+export type Res = {
+  key: string;
+  url: string;
 };

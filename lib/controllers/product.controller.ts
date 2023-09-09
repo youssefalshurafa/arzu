@@ -65,7 +65,7 @@ export async function createProduct({
 }: ProductType) {
   try {
     await connectToDB();
-    const product = await Product.create({
+    await Product.create({
       title,
       code,
       description,
@@ -76,7 +76,6 @@ export async function createProduct({
       thumbnail,
       images,
     });
-    return product;
   } catch (error: any) {
     throw new Error(`Failed to create product : ${error.message}`);
   }

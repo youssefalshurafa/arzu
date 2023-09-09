@@ -1,13 +1,16 @@
 import ProductForm from '@/components/forms/ProductForm';
+import { getCategories } from '@/lib/controllers/product.controller';
 
-const ProductsPage = () => {
+async function ProductsPage() {
+  const categories = await getCategories();
+  if (!categories) return null;
   return (
     <main>
       <div>
-        <ProductForm />
+        <ProductForm categories={categories} />
       </div>
     </main>
   );
-};
+}
 
 export default ProductsPage;

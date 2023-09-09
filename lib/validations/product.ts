@@ -1,13 +1,13 @@
 import * as z from 'zod';
 
 export const ProductValidation = z.object({
-  title: z.string().min(3).max(30),
-  code: z.number().optional(),
+  title: z.string().min(3).max(30).optional(),
+  code: z.string().optional(),
   description: z.string().min(3).max(30).optional(),
-  price: z.number().optional(),
+  price: z.string().optional(),
   size: z.string().optional(),
   category: z.string().optional(),
-  stock: z.number().optional(),
+  stock: z.string().optional(),
   thumbnail: z.string().url().optional(),
   images: z.array(z.string().url()).optional(),
 });

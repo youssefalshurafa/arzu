@@ -23,9 +23,17 @@ const productSchema = new mongoose.Schema({
   },
   stock: Number,
 
-  thumbnail: String,
+  thumbnail: {
+    imgKey: String,
+    imgUrl: String,
+  },
 
-  images: [String],
+  images: [
+    {
+      key: String,
+      url: String,
+    },
+  ],
 });
 
 const Product =
